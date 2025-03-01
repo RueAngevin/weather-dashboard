@@ -1,0 +1,9 @@
+### Get Weather Data for Helsinki
+GET https://api.open-meteo.com/v1/forecast?latitude=61.4991&longitude=23.7871&hourly=temperature_2m&past_days=1&forecast_days=0&timezone=Europe%2FHelsinki
+
+### Get Weather Data for Helsinki
+GET https://api.open-meteo.com/v1/forecast?latitude=61.4991&longitude=23.7871&hourly=precipitation&past_days=1&forecast_days=0&timezone=Europe%2FHelsinki
+
+
+### Get Weather Data for Helsinki
+GET https://api.open-meteo.com/v1/forecast?latitude=61.4991&longitude=23.7871&hourly=cloud_cover&past_days=1&forecast_days=0&timezone=Europe%2FHelsinki
