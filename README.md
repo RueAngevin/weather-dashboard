@@ -14,4 +14,13 @@ project phases
     -> implemented the timespan selector and updated the query accordingly to display relevent data
     -> cleand up the code for better readability
     -> changed the UI for best user experience
+    -> starting the final phase
+    -> changed the ui to display statistics and chart and new selector menu
+    -> updated the main.js to handle the new input values
+    -> updated the ui for better responsive design
+    -> added an error pop and updated the files 
+    -> built the project for deployment using vite
+    -> deployed the project to vercel
+
+project pictures
     ->

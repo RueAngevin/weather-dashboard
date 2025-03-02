@@ -13,18 +13,18 @@
 
   <nav class="bg-black bg-opacity-70 p-4">
     <ul class="flex justify-evenly">
-      <li><a href="#" id="temperature-tab" class="text-lg hover:text-teal-200">Temperature</a></li>
-      <li><a href="#" id="wind-tab" class="text-lg hover:text-teal-200">Wind Speed</a></li>
-      <li><a href="#" id="cloud_cover" class="text-lg hover:text-teal-200">Cloud Cover</a></li>
+      <li><a href="#" id="search-tab" class="text-sm lg:text-lg hover:text-teal-200">Search</a></li>
+      <li><a href="#" id="wind-tab" class="text-sm lg:text-lg hover:text-teal-200">Wind Speed</a></li>
+      <li><a href="#" id="cloud_cover" class="text-sm lg:text-lg hover:text-teal-200">Cloud Cover</a></li>
     </ul>
   </nav>
 
-  <div class="container mx-auto mt-10 mb-10 text-center flex justify-center gap-8">
+  <div class="container mx-auto mt-10 mb-10 text-center flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8">
 
     <!-- Main Data Box -->
-    <div class="data-box text-black bg-white bg-opacity-60 p-8 rounded-xl shadow-xl w-1/2 overflow-y-auto" style="max-height: 80vh;">
-      <h1 class="text-4xl font-semibold mb-5">Historical Weather Dashboard</h1>
-      <table class="table-auto w-full text-left">
+    <div class="data-box text-black max-h-270 bg-white bg-opacity-60 lg:p-8 rounded-xl shadow-xl w-3/4 xl:w-1/2 overflow-y-auto">
+      <h1 class="text-lg lg:text-4xl font-semibold mb-5">Historical Weather Dashboard</h1>
+      <table class="table-auto text-sm lg:text-base w-full text-left">
         <thead>
           <tr>
             <th class="px-4 py-2">Date</th>
@@ -37,11 +37,11 @@
     </div>
 
     <!-- Right Side Boxes -->
-    <div class="flex flex-col gap-8 w-1/4">
+    <div class="flex flex-col gap-8 w-3/4 xl:w-1/4">
 
       <!-- Timespan Selector Box -->
       <div class="timespan-box text-black bg-white bg-opacity-60 p-6 rounded-xl shadow-xl">
-        <h2 class="text-2xl font-semibold mb-4">Select Timespan</h2>
+        <h2 class="text-base lg:text-2xl font-semibold mb-4">Select Timespan</h2>
         <select id="timespan-selector" class="w-full p-2 rounded-lg bg-white bg-opacity-80 text-black">
           <option value="20">Latest 20 Readings</option>
           <option value="24">Last 24 Hours</option>
@@ -52,20 +52,63 @@
         </select>
       </div>
 
+      <!-- Parameter Selector Box -->
+      <div class="parameter-box text-black bg-white bg-opacity-60 p-6 rounded-xl shadow-xl">
+        <h2 class="text-base lg:text-2xl font-semibold mb-4">Select Parameter</h2>
+        <select id="parameter-selector" class="w-full p-2 rounded-lg bg-white bg-opacity-80 text-black">
+          <option value="temperature_2m">Temperature</option>
+          <option value="relative_humidity_2m">Relative Humidity</option>
+          <option value="apparent_temperature">Apparent Temperature</option>
+          <option value="surface_pressure">Surface Pressure</option>
+          <option value="wind_speed_80m">Wind Speed (80m)</option>
+          <option value="wind_direction_10m">Wind Direction (10m)</option>
+          <option value="wind_direction_80m">Wind Direction (80m)</option>
+          <option value="wind_direction_120m">Wind Direction (120m)</option>
+          <option value="wind_direction_180m">Wind Direction (180m)</option>
+          <option value="wind_gusts_10m">Wind Gusts (10m)</option>
+          <option value="shortwave_radiation">Shortwave Radiation</option>
+          <option value="direct_radiation">Direct Radiation</option>
+          <option value="direct_normal_irradiance">Direct Normal Irradiance</option>
+          <option value="global_tilted_irradiance">Global Tilted Irradiance</option>
+          <option value="evapotranspiration">Evapotranspiration</option>
+          <option value="precipitation">Precipitation</option>
+          <option value="snowfall">Snowfall</option>
+          <option value="rain">Rain</option>
+          <option value="showers">Showers</option>
+          <option value="weather_code">Weather Code</option>
+          <option value="freezing_level_height">Freezing Level Height</option>
+          <option value="soil_temperature_0cm">Soil Temperature (0cm)</option>
+          <option value="soil_temperature_6cm">Soil Temperature (6cm)</option>
+          <option value="soil_temperature_18cm">Soil Temperature (18cm)</option>
+          <option value="soil_temperature_54cm">Soil Temperature (54cm)</option>
+          <option value="soil_moisture_0_to_1cm">Soil Moisture (0-1cm)</option>
+          <option value="soil_moisture_1_to_3cm">Soil Moisture (1-3cm)</option>
+          <option value="soil_moisture_3_to_9cm">Soil Moisture (3-9cm)</option>
+          <option value="soil_moisture_9_to_27cm">Soil Moisture (9-27cm)</option>
+          <option value="soil_moisture_27_to_81cm">Soil Moisture (27-81cm)</option>
+        </select>
+      </div>
+
       <!-- Chart Box -->
       <div id="chart-container" class="bg-white text-black h-90 bg-opacity-60 pl-6 pr-6 pt-6 pb-12 rounded-xl shadow-xl">
-        <h2 class="text-2xl font-semibold mb-4">Weather Chart</h2>
+        <h2 class="text-sm lg:text-2xl font-semibold mb-4">Weather Chart</h2>
         <canvas id="weatherChart"></canvas>
       </div>
 
       <!-- Statistics Box -->
       <div id="statistics" class="bg-white text-black h-90 bg-opacity-60 p-6 rounded-xl shadow-xl">
-        <h2 class="text-2xl font-semibold mb-4">Statistical Information <br>(last seven days)</h2>
-        <ul id="stats-data" class="text-lg"></ul>
+        <h2 class="text-lg lg:text-2xl font-semibold mb-4">Statistical Information <br>(last seven days)</h2>
+        <ul id="stats-data" class="text-base lg:text-lg"></ul>
       </div>
 
     </div>
 
+  </div>
+
+  <!-- Error Pop-up -->
+  <div id="error-popup" class="hidden fixed bottom-4 right-4 bg-red-500 text-white p-4 rounded-lg shadow-lg">
+    <span id="error-message"></span>
+    <button id="close-error" class="ml-4 text-white hover:text-gray-200">×</button>
   </div>
 
   <script type="module" src="/src/main.js"></script>
