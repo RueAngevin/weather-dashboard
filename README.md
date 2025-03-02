@@ -1,5 +1,5 @@
 project setup
-    -> setup the project using vite
+    -> setup the project using vite (I didn't use react I used vanilla javascript)
     -> Installed tailwind css for styling
 
 project phases
