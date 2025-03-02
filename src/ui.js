@@ -2,7 +2,7 @@ let weatherChart = null;
 
 export function updateUI(data, unit) {
     const weatherDataElement = document.getElementById('weather-data');
-    weatherDataElement.innerHTML = ''; // Clear previous data
+    weatherDataElement.innerHTML = '';
 
     data.forEach(item => {
         const row = document.createElement('tr');
@@ -26,22 +26,25 @@ export function updateChart(data, label) {
 
     // Destroy previous chart if it exists
     if (weatherChart) {
-        weatherChart.destroy(); // Destroy previous chart to avoid duplicates
+        weatherChart.destroy();
     }
 
-    // Create a new bar chart
+    // Determine chart type based on data length
+    const chartType = data.length > 50 ? "line" : "bar"; // Use line chart for long datasets
+
+    // Create a new chart
     weatherChart = new Chart(ctx, {
-        type: "bar", // Bar chart type
+        type: chartType, // Dynamic chart type
         data: {
-            labels: labels, // X-axis labels (date and time)
+            labels: labels,
             datasets: [{
                 label: label,
-                data: values, // Y-axis values (weather data)
-                borderColor: "white", // Bar border color
-                backgroundColor: "rgba(56, 178, 172, 0.7)", // Bar color with some transparency
-                borderWidth: 1,
-                barPercentage: 1.5, // Controls the width of bars
-                categoryPercentage: 0.5, // Controls the space between bars
+                data: values,
+                borderColor: "rgba(56, 178, 172, 1)", // Line/border color
+                backgroundColor: chartType === "bar" ? "rgba(56, 178, 172, 0.7)" : "transparent", // Bar color or transparent for line
+                borderWidth: 2,
+                pointRadius: chartType === "line" ? 2 : 0, // Show points only for line chart
+                fill: chartType === "line", // Fill area under the line for line chart
             }]
         },
         options: {
@@ -49,26 +52,87 @@ export function updateChart(data, label) {
             maintainAspectRatio: false,
             scales: {
                 x: {
-                    ticks: { color: "black" },
-                    grid: { color: "gray" } // Light grid lines for X-axis
+                    ticks: {
+                        color: "black",
+                        maxRotation: 90, // Rotate labels to 90 degrees
+                        minRotation: 45, // Minimum rotation angle
+                        autoSkip: true, // Automatically skip labels to avoid overlap
+                        maxTicksLimit: data.length > 50 ? 20 : undefined, // Limit number of labels for long datasets
+                    },
+                    grid: { color: "gray" },
                 },
                 y: {
-                    ticks: { 
+                    ticks: {
                         color: "black",
-                        // Automatic range based on the data
-                        beginAtZero: false, // Don't force it to start from 0
+                        beginAtZero: false,
                     },
-                    grid: { color: "gray" } // Light grid lines for Y-axis
+                    grid: { color: "gray" },
                 }
             },
             plugins: {
                 legend: {
                     labels: {
-                        color: 'black' // Set legend text color to white
+                        color: 'black'
                     }
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false,
                 }
-            }
+            },
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
         }
     });
 }
+
+export function updateSevenDaysStats(sevenDaysData, type) {
+    if (!sevenDaysData || sevenDaysData.length === 0) {
+        document.getElementById("stats-data").innerHTML = `<li>No data available for ${type}.</li>`;
+        return;
+    }
+
+    // Convert all values to numbers and filter out non numeric values
+    const numericData = sevenDaysData.map(value => Number(value)).filter(num => !isNaN(num));
+
+    if (numericData.length === 0) {
+        document.getElementById("stats-data").innerHTML = `<li>Invalid data received for ${type}.</li>`;
+        return;
+    }
+
+    const mean = numericData.reduce((sum, val) => sum + val, 0) / numericData.length;
+    const sortedData = [...numericData].sort((a, b) => a - b);
+    const median = sortedData.length % 2 === 0
+        ? (sortedData[sortedData.length / 2 - 1] + sortedData[sortedData.length / 2]) / 2
+        : sortedData[Math.floor(sortedData.length / 2)];
+    const mode = findMode(numericData);
+    const range = Math.max(...numericData) - Math.min(...numericData);
+    const stdDev = Math.sqrt(numericData.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / numericData.length);
+    const min = Math.min(...numericData);
+    const max = Math.max(...numericData);
+    const variance = stdDev ** 2;
+
+    document.getElementById("stats-data").innerHTML = `
+        <li><strong>Mean:</strong> ${mean.toFixed(2)}</li>
+        <li><strong>Median:</strong> ${median.toFixed(2)}</li>
+        <li><strong>Mode:</strong> ${mode.length ? mode.join(", ") : "No mode"}</li>
+        <li><strong>Range:</strong> ${range.toFixed(2)}</li>
+        <li><strong>Standard Deviation:</strong> ${stdDev.toFixed(2)}</li>
+        <li><strong>Min:</strong> ${min.toFixed(2)}</li>
+        <li><strong>Max:</strong> ${max.toFixed(2)}</li>
+        <li><strong>Variance:</strong> ${variance.toFixed(2)}</li>
+    `;
+}
+
+// Helper function to calculate mode
+function findMode(arr) {
+    const frequency = {};
+    arr.forEach(num => frequency[num] = (frequency[num] || 0) + 1);
+    const maxFreq = Math.max(...Object.values(frequency));
+    return Object.keys(frequency).filter(num => frequency[num] === maxFreq).map(Number);
+}
+
 
